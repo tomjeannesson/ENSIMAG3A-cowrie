@@ -1,4 +1,0 @@
-ingest.geoip.downloader.enabled: false
-xpack.security.enabled: false
-cluster.name: "docker-cluster"
-network.host: 0.0.0.0
