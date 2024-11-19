@@ -5,11 +5,11 @@ services:
         context: .
         dockerfile: ./docker/cowrie.Dockerfile
     image: cowrie
-    ports:
-      - "22:22"
-      - "23:23"
-      - "2222:2222"
-      - "2323:2323"
+    # ports:
+    #   - "22:22"
+    #   - "23:23"
+    #   - "2222:2222"
+    #   - "2323:2323"
 
   db:
     build:
