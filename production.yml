@@ -1,22 +1,25 @@
 version: "3"
 services:
   cowrie:
-    image: cowrie/cowrie
-    ports:
-      - "22:22"
-      - "23:23"
-      - "2222:2222"
-      - "2323:2323"
-    volumes:
-      - ./cowrie/config/cowrie.cfg:/cowrie/cowrie-git/etc/cowrie.cfg
-      - ./cowrie/config/userdb.txt:/cowrie/cowrie-git/etc/userdb.txt
+    build:
+        context: .
+        dockerfile: ./docker/cowrie.Dockerfile
+    image: cowrie
+    # ports:
+    #   - "22:22"
+    #   - "23:23"
+    #   - "2222:2222"
+    #   - "2323:2323"
+
 
   db:
-    image: mysql:latest # type and version of database
+    build:
+        context: .
+        dockerfile: ./docker/db.Dockerfile
     restart: always # if something brokes, it will automatically restart
+    image: db
     volumes:
       - cowrie-db:/var/lib/mysql:z
-      - "./db-init.sql:/docker-entrypoint-initdb.d/1.sql"
     ports:
       - "3306:3306"
     environment:
@@ -28,8 +31,6 @@ services:
   grafana:
     image: grafana/grafana:latest
     restart: always
-    ports:
-      - "3000:3000"
     volumes:
       - grafana:/var/lib/grafana:z
     environment:
@@ -38,6 +39,14 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_ANALYTICS_CHECK_FOR_UPDATES=false
       - GF_ANALYTICS_REPORTING_ENABLED=false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.django.rule=(`161.35.210.170`)"
+      - "traefik.http.routers.django.entrypoints=websecure"
+      - "traefik.http.routers.django.tls.certresolver=myresolver"
+      - "traefik.http.services.django.loadbalancer.server.port=3000"
+    ports:
+      - "3000:3000"
 
 volumes:
   cowrie-etc:
