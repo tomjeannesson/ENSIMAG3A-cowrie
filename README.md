@@ -1,5 +1,10 @@
+
+
 # cowrie-elastic-stack
 Build honeypot with Cowrie, and Analyze the logs with Elastic Stack
+Public url: https://ci-35ws9rvgbd.eba-tjt7rpak.eu-west-3.elasticbeanstalk.com/
+Public domain: ci-35ws9rvgbd.eba-tjt7rpak.eu-west-3.elasticbeanstalk.com
+Public IP: 35.181.2.233
 
 ## Configuration
 * Docker Compose
