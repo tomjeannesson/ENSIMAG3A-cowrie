@@ -1,3 +1,6 @@
+import socket
+from time import sleep
+
 import pymysql  # ou votre bibliothèque SQL
 import requests
 
@@ -21,23 +24,30 @@ ips = cursor.fetchall()
 # Géolocaliser chaque IP
 for ip_row in ips:
     ip = ip_row[0]
-    response = requests.get(f"{API_URL}{ip}")
-    data = response.json()
+    success = False
+    while not success:
+        try:
+            response = requests.get(f"{API_URL}{ip}")
+            data = response.json()
+            success = True
+        except requests.exceptions.JSONDecodeError:
+            print("An error occurred, retrying in 1s.")
+            sleep(1)
 
     if data["status"] == "success":
         latitude = data["lat"]
         longitude = data["lon"]
+        domain = socket.getnameinfo((ip, 0), 0)[0]
 
         print(
-            f"UPDATE lat = {latitude}, long = {longitude} WHERE ip = {ip};",
+            f"UPDATE lat = {latitude}, long = {longitude}, domain = {domain} WHERE ip = {ip} AND ip != '{domain}';"
         )
 
-        # Mettre à jour la base
         cursor.execute(
             f"""
             UPDATE cowrie.sessions 
-            SET lat = {latitude}, `long` = {longitude} 
-            WHERE ip = '{ip}';
+            SET lat = {latitude}, `long` = {longitude}, `domain` = '{domain}'
+            WHERE ip = '{ip}' AND ip != '{domain}';
         """
         )
         conn.commit()
