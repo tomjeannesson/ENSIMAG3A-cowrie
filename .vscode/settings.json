@@ -1,5 +1,9 @@
 {
     "yaml.schemas": {
         "https://json.schemastore.org/github-workflow.json": "file:///Users/tomjeannesson/Documents/ENSIMAG3A/RAS/cowrie-elastic-stack/.github/workflows/deploy.yml"
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff"
     }
 }
